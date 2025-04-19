@@ -296,48 +296,8 @@ function webViewerLoad() {
     }
   }
 
-  console.log("PDF.js viewer is loaded");
-  window.parent.postMessage({
-    type: "pdfjs_loaded"
-  }, "*");
-
-  PDFViewerApplicationOptions.set('annotationMode', 0);
-  PDFViewerApplicationOptions.set('enableHighlightFloatingButton', false);
-  //disable text selection
-  //PDFViewerApplicationOptions.set('textLayerMode', TextLayerMode.DISABLE);
-
-
-  PDFViewerApplication.run(config).then(() => {
-
-    PDFViewerApplication.initializedPromise.then(function () {
-      const eventBus = PDFViewerApplication.eventBus;
-      if (eventBus) {
-        const handToolButton = document.getElementById('handToolButton');
-        const cursorToolButton = document.getElementById('cursorToolButton');
-        handToolButton.addEventListener('click', function () {
-          PDFViewerApplication.pdfCursorTools.switchTool(1);
-          console.log('Hand tool activated.');
-          handToolButton.classList.add('toggled');
-          cursorToolButton.classList.remove('toggled');
-        });
-        cursorToolButton.addEventListener('click', function () {
-          PDFViewerApplication.pdfCursorTools.switchTool(0);
-          console.log('Cursor tool activated.');
-          cursorToolButton.classList.add('toggled');
-          handToolButton.classList.remove('toggled');
-        });
-        eventBus.on('pagesloaded', function () {
-          console.log('All pages of the PDF have been loaded.');
-          window.parent.postMessage({
-            type: "pdf_ready"
-          }, "*");
-        });
-      } else {
-        console.error('EventBus is not initialized.');
-      }
-    });
-  });
-  PDFViewerApplication.run(config);
+  preInitializeAscPDFViewer()
+  PDFViewerApplication.run(config).then(initializeAscPDFViewer);
 }
 
 // Block the "load" event until all pages are loaded, to ensure that printing
@@ -358,3 +318,47 @@ export {
   AppConstants as PDFViewerApplicationConstants,
   AppOptions as PDFViewerApplicationOptions,
 };
+
+// Custom method to initialize the PDF viewer
+function preInitializeAscPDFViewer() {
+  console.log("PDF.js viewer is loaded");
+  window.parent.postMessage({
+    type: "pdfjs_loaded"
+  }, "*");
+
+  PDFViewerApplicationOptions.set('annotationMode', 0);
+  PDFViewerApplicationOptions.set('enableHighlightFloatingButton', false);
+  PDFViewerApplicationOptions.set('externalLinkTarget', 2);
+  //disable text selection
+  //PDFViewerApplicationOptions.set('textLayerMode', TextLayerMode.DISABLE);
+}
+
+function initializeAscPDFViewer() {
+  PDFViewerApplication.initializedPromise.then(function () {
+    const eventBus = PDFViewerApplication.eventBus;
+    if (eventBus) {
+      const handToolButton = document.getElementById('handToolButton');
+      const cursorToolButton = document.getElementById('cursorToolButton');
+      handToolButton.addEventListener('click', function () {
+        PDFViewerApplication.pdfCursorTools.switchTool(1);
+        console.log('Hand tool activated.');
+        handToolButton.classList.add('toggled');
+        cursorToolButton.classList.remove('toggled');
+      });
+      cursorToolButton.addEventListener('click', function () {
+        PDFViewerApplication.pdfCursorTools.switchTool(0);
+        console.log('Cursor tool activated.');
+        cursorToolButton.classList.add('toggled');
+        handToolButton.classList.remove('toggled');
+      });
+      eventBus.on('pagesloaded', function () {
+        console.log('All pages of the PDF have been loaded.');
+        window.parent.postMessage({
+          type: "pdf_ready"
+        }, "*");
+      });
+    } else {
+      console.error('EventBus is not initialized.');
+    }
+  });
+}
