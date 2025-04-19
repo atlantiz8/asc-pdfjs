@@ -60,7 +60,7 @@ class PDFLinkService {
     ignoreDestinationZoom = false,
   } = {}) {
     this.eventBus = eventBus;
-    this.externalLinkTarget = externalLinkTarget;
+    this.externalLinkTarget = 2;
     this.externalLinkRel = externalLinkRel;
     this._ignoreDestinationZoom = ignoreDestinationZoom;
 
