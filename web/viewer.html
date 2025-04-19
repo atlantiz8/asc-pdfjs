@@ -243,7 +243,19 @@ See https://github.com/adobe-type-tools/cmap-resources
                 </span>
               </div>
               <div id="toolbarViewerRight" class="toolbarHorizontalGroup">
-                <div id="editorModeButtons" class="toolbarHorizontalGroup" role="radiogroup">
+
+                <div id="cursorToolButtons" class="toolbarHorizontalGroup" role="radiogroup">
+
+                  <button id="handToolButton" class="toolbarButton" title="Hand Tool" tabindex="31" role="radio" aria-checked="false">
+                      <span class="toolbarButtonIcon handToolIcon"></span>
+                  </button>
+                  <button id="cursorToolButton" class="toolbarButton toggled" title="Cursor Tool" tabindex="32" role="radio" aria-checked="true">
+                      <span class="toolbarButtonIcon cursorToolIcon"></span>
+                  </button>
+                </div>
+
+
+                <div id="editorModeButtons" class="toolbarHorizontalGroup" role="radiogroup" style="display:none">
                   <div id="editorSignature" class="toolbarButtonWithContainer" hidden="true">
                     <button id="editorSignatureButton" class="toolbarButton" type="button" tabindex="0" disabled="disabled" role="radio" aria-expanded="false" aria-haspopup="true" aria-controls="editorSignatureParamsToolbar" data-l10n-id="pdfjs-editor-signature-button">
                       <span data-l10n-id="pdfjs-editor-signature-button-label"></span>
@@ -345,9 +357,9 @@ See https://github.com/adobe-type-tools/cmap-resources
                   </button>
                 </div>
 
-                <div class="verticalToolbarSeparator hiddenMediumView"></div>
+                <div class="verticalToolbarSeparator hiddenMediumView" style="display:none"></div>
 
-                <div id="secondaryToolbarToggle" class="toolbarButtonWithContainer">
+                <div id="secondaryToolbarToggle" class="toolbarButtonWithContainer" style="display:none">
                   <button id="secondaryToolbarToggleButton" class="toolbarButton" type="button" tabindex="0" data-l10n-id="pdfjs-tools-button" aria-expanded="false" aria-haspopup="true" aria-controls="secondaryToolbar">
                     <span data-l10n-id="pdfjs-tools-button-label"></span>
                   </button>

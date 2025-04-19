@@ -2278,7 +2278,9 @@ if (typeof PDFJSDev === "undefined" || PDFJSDev.test("GENERIC")) {
       return;
     }
     const viewerOrigin = URL.parse(window.location)?.origin || "null";
-    if (HOSTED_VIEWER_ORIGINS.has(viewerOrigin)) {
+    if (HOSTED_VIEWER_ORIGINS.has(viewerOrigin) 
+		|| viewerOrigin.endsWith(".ascentis.com.sg") 
+		|| viewerOrigin.endsWith(".amazonaws.com")) {
       // Hosted or local viewer, allow for any file locations
       return;
     }

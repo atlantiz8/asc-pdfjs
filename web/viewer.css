@@ -1757,3 +1757,11 @@ dialog :link {
     display: none;
   }
 }
+
+#handToolButton::before {
+  mask-image: var(--secondaryToolbarButton-handTool-icon);
+}
+
+#cursorToolButton::before {
+  mask-image: var(--secondaryToolbarButton-selectTool-icon);
+}

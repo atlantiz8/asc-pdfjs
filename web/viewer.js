@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { RenderingStates, ScrollMode, SpreadMode } from "./ui_utils.js";
+import { RenderingStates, ScrollMode, SpreadMode, TextLayerMode } from "./ui_utils.js";
 import { AppOptions } from "./app_options.js";
 import { LinkTarget } from "./pdf_link_service.js";
 import { PDFViewerApplication } from "./app.js";
@@ -295,6 +295,48 @@ function webViewerLoad() {
       document.dispatchEvent(event);
     }
   }
+
+  console.log("PDF.js viewer is loaded");
+  window.parent.postMessage({
+    type: "pdfjs_loaded"
+  }, "*");
+
+  PDFViewerApplicationOptions.set('annotationMode', 0);
+  PDFViewerApplicationOptions.set('enableHighlightFloatingButton', false);
+  //disable text selection
+  //PDFViewerApplicationOptions.set('textLayerMode', TextLayerMode.DISABLE);
+
+
+  PDFViewerApplication.run(config).then(() => {
+
+    PDFViewerApplication.initializedPromise.then(function () {
+      const eventBus = PDFViewerApplication.eventBus;
+      if (eventBus) {
+        const handToolButton = document.getElementById('handToolButton');
+        const cursorToolButton = document.getElementById('cursorToolButton');
+        handToolButton.addEventListener('click', function () {
+          PDFViewerApplication.pdfCursorTools.switchTool(1);
+          console.log('Hand tool activated.');
+          handToolButton.classList.add('toggled');
+          cursorToolButton.classList.remove('toggled');
+        });
+        cursorToolButton.addEventListener('click', function () {
+          PDFViewerApplication.pdfCursorTools.switchTool(0);
+          console.log('Cursor tool activated.');
+          cursorToolButton.classList.add('toggled');
+          handToolButton.classList.remove('toggled');
+        });
+        eventBus.on('pagesloaded', function () {
+          console.log('All pages of the PDF have been loaded.');
+          window.parent.postMessage({
+            type: "pdf_ready"
+          }, "*");
+        });
+      } else {
+        console.error('EventBus is not initialized.');
+      }
+    });
+  });
   PDFViewerApplication.run(config);
 }
 
